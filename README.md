@@ -9,23 +9,30 @@ Installing one plugin, `skills`, installs everything listed here.
 | Plugin | Skills | Source | Author | License |
 |---|---|---|---|---|
 | `skills` | 0 | `./plugins/skills` in this repo | | |
-| `unslop` | 1 | [`cursor/plugins`](https://github.com/cursor/plugins/tree/main/pstack/skills/unslop), path `pstack/skills/unslop` | Lauren Tan | MIT |
+| `unslop` | 1 | `./plugins/unslop` in this repo, vendored from [`cursor/plugins`](https://github.com/cursor/plugins/tree/main/pstack/skills/unslop) | Lauren Tan | MIT |
 | `mattpocock-skills` | 25 | [`mattpocock/skills`](https://github.com/mattpocock/skills) | Matt Pocock | MIT |
 
 `skills` is the bundle. Its manifest is a name, a version and a `dependencies` array. Installing
 it installs every plugin it lists.
 
 Skills are namespaced by plugin name, so they appear as `unslop:unslop`,
-`mattpocock-skills:tdd`, and so on.
+`mattpocock-skills:tdd`, and so on. The name comes from `name` in the plugin's
+`.claude-plugin/plugin.json`. A plugin without that file is named after its install
+directory instead, which for a marketplace install is a version string that changes on
+every update.
 
 ## Repository layout
 
 ```
 .claude-plugin/
-  marketplace.json              the plugin list
+  marketplace.json                the plugin list
 plugins/
   skills/
-    .claude-plugin/plugin.json  the bundle manifest
+    .claude-plugin/plugin.json    the bundle manifest
+  unslop/
+    .claude-plugin/plugin.json
+    skills/unslop/SKILL.md        vendored, see below
+    LICENSE
 README.md
 ```
 
@@ -108,6 +115,14 @@ For a skill set that lives in someone else's repo.
    }
    ```
 
+   Whatever path you point at has to contain `.claude-plugin/plugin.json`. Check first:
+
+   ```bash
+   gh api repos/owner/repo/contents/a/b/.claude-plugin --jq '.[].name'
+   ```
+
+   A 404 means the upstream is not a Claude plugin. Vendor it instead.
+
 2. Add the plugin name to `dependencies` in `plugins/skills/.claude-plugin/plugin.json`.
 3. Bump `version` in that same file.
 4. Validate, then push.
@@ -118,6 +133,39 @@ For a skill set that lives in someone else's repo.
 
 Leave dependencies as bare names. A semver constraint resolves against git tags shaped like
 `{plugin}--v{version}`, which these upstreams do not publish.
+
+## Vendor a third-party skill
+
+For a skill whose upstream ships no `.claude-plugin/plugin.json`: a Cursor plugin, a loose
+`SKILL.md` in a monorepo. Fetching one of those directly leaves the plugin unnamed, so copy it in.
+
+`unslop` is the worked example. `cursor/plugins` is a Cursor marketplace, its manifest sits at
+`pstack/.cursor-plugin/plugin.json`, and `pstack/skills/unslop` holds nothing but `SKILL.md`.
+
+1. Create `plugins/<name>/` with the layout from "Add a custom skill".
+2. Copy the upstream `SKILL.md` into `skills/<skill-name>/`.
+3. Copy the upstream `LICENSE` to `plugins/<name>/LICENSE`. You are redistributing it, so the
+   notice travels with it.
+4. Set `author`, `license`, `homepage` and `repository` in the manifest to the upstream's, not
+   yours, and record the commit you copied from:
+
+   ```json
+   "metadata": {
+     "vendoredFrom": "https://github.com/owner/repo/tree/main/a/b",
+     "vendoredAtCommit": "<40-char sha>"
+   }
+   ```
+
+5. Add the entry and the dependency as with any other plugin.
+
+Nothing updates a vendored skill for you. To re-sync, diff upstream against the copy:
+
+```bash
+gh api repos/cursor/plugins/contents/pstack/skills/unslop/SKILL.md --jq '.content' | base64 -d | diff - plugins/unslop/skills/unslop/SKILL.md
+```
+
+If it has moved on, copy the new file in, update `vendoredAtCommit`, and bump `version` in
+`plugins/unslop/.claude-plugin/plugin.json`.
 
 ## Add a custom skill
 
