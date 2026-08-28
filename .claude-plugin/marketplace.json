@@ -1,21 +1,38 @@
 {
-  "name": "pete",
+  "name": "jplozancic",
   "owner": {
-    "name": "jplozancic",
+    "name": "Peter Lozancic",
     "url": "https://github.com/jplozancic"
   },
-  "description": "Peter's personal Claude Code marketplace. Tracks third-party skills upstream so every machine gets the same versions.",
+  "description": "Peter's Claude Code marketplace. One install per machine, pulling third-party skills straight from the repos that publish them.",
   "plugins": [
     {
+      "name": "skills",
+      "source": "./plugins/skills",
+      "description": "Install this. It pulls in every skill set below.",
+      "category": "productivity",
+      "keywords": ["bundle", "skills", "meta"]
+    },
+    {
       "name": "unslop",
-      "description": "Cut AI tells from any writing. Vendored live from cursor/plugins pstack.",
-      "category": "writing",
-      "keywords": ["writing", "editing", "style"],
       "source": {
         "source": "git-subdir",
         "url": "https://github.com/cursor/plugins.git",
         "path": "pstack/skills/unslop"
-      }
+      },
+      "description": "Cuts AI tells out of writing. From Lauren Tan's pstack in cursor/plugins. MIT.",
+      "category": "writing",
+      "keywords": ["writing", "editing", "style"]
+    },
+    {
+      "name": "mattpocock-skills",
+      "source": {
+        "source": "github",
+        "repo": "mattpocock/skills"
+      },
+      "description": "Matt Pocock's 25 engineering and productivity skills: TDD, code review, grilling, domain modelling and more. MIT.",
+      "category": "engineering",
+      "keywords": ["engineering", "tdd", "code-review", "grilling", "productivity"]
     }
   ]
 }

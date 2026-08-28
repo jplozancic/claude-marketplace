@@ -1,0 +1,14 @@
+{
+  "name": "skills",
+  "version": "1.0.0",
+  "description": "Bundle plugin. Ships no skills of its own, it just declares the sets to install.",
+  "author": {
+    "name": "Peter Lozancic",
+    "url": "https://github.com/jplozancic"
+  },
+  "repository": "https://github.com/jplozancic/claude-marketplace",
+  "dependencies": [
+    "unslop",
+    "mattpocock-skills"
+  ]
+}
