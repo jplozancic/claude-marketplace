@@ -1,0 +1,21 @@
+{
+  "name": "pete",
+  "owner": {
+    "name": "jplozancic",
+    "url": "https://github.com/jplozancic"
+  },
+  "description": "Peter's personal Claude Code marketplace. Tracks third-party skills upstream so every machine gets the same versions.",
+  "plugins": [
+    {
+      "name": "unslop",
+      "description": "Cut AI tells from any writing. Vendored live from cursor/plugins pstack.",
+      "category": "writing",
+      "keywords": ["writing", "editing", "style"],
+      "source": {
+        "source": "git-subdir",
+        "url": "https://github.com/cursor/plugins.git",
+        "path": "pstack/skills/unslop"
+      }
+    }
+  ]
+}
