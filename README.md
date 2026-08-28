@@ -40,7 +40,7 @@ claude plugin install skills@jplozancic --scope user
 ```
 
 The second command prints `+ 2 dependencies` and installs `unslop` and `mattpocock-skills`.
-Restart the session or run `/reload-plugins` to load them.
+Run `/reload-plugins` to activate them, or restart the session.
 
 The repo is private, so the first command needs GitHub credentials on the machine. Claude Code
 tries SSH and falls back to HTTPS. Run `gh auth login` if neither is configured.
@@ -184,4 +184,5 @@ Machines with `autoUpdate` on get new plugins after the next session start. To p
 claude plugin update skills@jplozancic
 ```
 
-Then run `/reload-plugins`.
+Then run `/reload-plugins`, or restart the session. `/reload-skills` is a different command
+that rescans skill files on disk and does not re-register plugins.
